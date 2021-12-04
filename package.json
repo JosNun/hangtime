@@ -11,5 +11,8 @@
   "devDependencies": {
     "astro": "^0.21.10",
     "tailwindcss": "^2.2.19"
+  },
+  "dependencies": {
+    "date-fns": "^2.27.0"
   }
 }

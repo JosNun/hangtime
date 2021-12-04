@@ -13,7 +13,7 @@
 <div class="flex items-center justify-center space-x-4">
   <button on:click={subtract}> - </button>
 
-  <pre>{count}</pre>
+  <pre class="font-sans">{count}</pre>
 
   <button on:click={add}> + </button>
 </div>
