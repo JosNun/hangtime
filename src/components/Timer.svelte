@@ -22,7 +22,9 @@
   });
 </script>
 
-<div class="text-3xl flex items-center justify-center">
+<div
+  class="text-9xl font-semibold text-gray-800 tabular-nums flex items-center justify-center"
+>
   <div>{timeRemaining.getMinutes()}</div>
   :
   <div>{timeRemaining.getSeconds().toString().padStart(2, "0")}</div>
