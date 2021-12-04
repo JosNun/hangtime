@@ -10,7 +10,7 @@
   }
 </script>
 
-<div>
+<div class="flex items-center justify-center space-x-4">
   <button on:click={subtract}> - </button>
 
   <pre>{count}</pre>
