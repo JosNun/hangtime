@@ -1,14 +1,7 @@
 ---
-// Component Imports
-import Counter from '../components/Counter.svelte';
 import Timer from '../components/Timer.svelte';
-// You can import components from any supported Framework here!
+import Settings from '../components/Settings.svelte';
 
-
-// Component Script:
-// You can write any JavaScript/TypeScript that you'd like here.
-// It will run during the build, but never in the browser.
-// All variables are available to use in the HTML template below.
 let title = 'My Astro Site';
 
 // Full Astro Component Syntax:
@@ -27,8 +20,8 @@ let title = 'My Astro Site';
 <body>
     <main>
         <div class="w-screen h-screen flex items-center justify-center">
-            <Counter client:load />
             <Timer client:load />
+            <Settings client:load />
         </div>
     </main>
 </body>
