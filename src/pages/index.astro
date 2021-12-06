@@ -14,13 +14,18 @@ let title = 'My Astro Site';
     <title>{title}</title>
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+
     
     <link rel="stylesheet" href={Astro.resolve('../styles/global.css')}>
 </head>
 <body>
     <main>
         <div class="w-screen h-screen flex items-center justify-center">
-            <Timer client:load />
+            <Timer client:only />
             <Settings client:load />
         </div>
     </main>
