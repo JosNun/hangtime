@@ -3,6 +3,14 @@
   import { settings } from "../stores";
   let isOpen = true;
 
+  const inputHour = $settings.endTime.getHours().toString().padStart(2, "0");
+  const inputMinute = $settings.endTime
+    .getMinutes()
+    .toString()
+    .padStart(2, "0");
+
+  $: inputValue = inputHour + ":" + inputMinute;
+
   function onDateChange(dateInput: string) {
     const [hours, minutes] = dateInput.split(":");
 
@@ -41,6 +49,10 @@
       <button class="text-gray-600" on:click={() => (isOpen = false)}>X</button>
     </div>
 
-    <input type="time" on:change={(e) => onDateChange(e.currentTarget.value)} />
+    <input
+      type="time"
+      bind:value={inputValue}
+      on:change={(e) => onDateChange(e.currentTarget.value)}
+    />
   </div>
 </div>
