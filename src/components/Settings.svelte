@@ -1,5 +1,24 @@
 <script lang="ts">
+  import { isValid } from "date-fns";
+  import { settings } from "../stores";
   let isOpen = true;
+
+  function onDateChange(dateInput: string) {
+    const [hours, minutes] = dateInput.split(":");
+
+    const newDate = new Date();
+    newDate.setHours(parseInt(hours));
+    newDate.setMinutes(parseInt(minutes));
+
+    if (!isValid(newDate)) {
+      return;
+    }
+
+    settings.update((settings) => ({
+      ...settings,
+      endTime: newDate,
+    }));
+  }
 </script>
 
 <div>
@@ -21,5 +40,7 @@
 
       <button class="text-gray-600" on:click={() => (isOpen = false)}>X</button>
     </div>
+
+    <input type="time" on:change={(e) => onDateChange(e.currentTarget.value)} />
   </div>
 </div>
