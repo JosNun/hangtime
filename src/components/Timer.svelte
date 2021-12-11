@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { settings } from "../stores";
 
   let currentDate = new Date();
@@ -8,17 +8,23 @@
     $settings.endTime.getTime() - currentDate.getTime()
   );
 
+  let animationFrame = null;
+
   function render() {
     currentDate = new Date();
     timeRemaining = new Date(
       $settings.endTime.getTime() - currentDate.getTime()
     );
 
-    window.requestAnimationFrame(render);
+    animationFrame = window.requestAnimationFrame(render);
   }
 
   onMount(() => {
     render();
+  });
+
+  onDestroy(() => {
+    window.cancelAnimationFrame(animationFrame);
   });
 </script>
 
