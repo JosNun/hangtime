@@ -49,10 +49,18 @@
       <button class="text-gray-600" on:click={() => (isOpen = false)}>X</button>
     </div>
 
-    <input
-      type="time"
-      bind:value={inputValue}
-      on:change={(e) => onDateChange(e.currentTarget.value)}
-    />
+    <div class="px-4">
+      <label>
+        <div class="font-bold text-sm text-gray-600 tracking-wide border">
+          Countdown To
+        </div>
+        <input
+          type="time"
+          class="px-4 py-2 text-gray-600 rounded mt-1"
+          bind:value={inputValue}
+          on:change={(e) => onDateChange(e.currentTarget.value)}
+        />
+      </label>
+    </div>
   </div>
 </div>
