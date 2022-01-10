@@ -11,6 +11,8 @@
 
   $: inputValue = inputHour + ":" + inputMinute;
 
+  $: keywords = $settings.keywords;
+
   function onDateChange(dateInput: string) {
     const [hours, minutes] = dateInput.split(":");
 
@@ -49,8 +51,8 @@
       <button class="text-gray-600" on:click={() => (isOpen = false)}>X</button>
     </div>
 
-    <div class="px-4">
-      <label>
+    <div class="px-4 space-y-4">
+      <label class="block">
         <div class="font-bold text-sm text-gray-600 tracking-wide border">
           Countdown To
         </div>
@@ -61,6 +63,35 @@
           on:change={(e) => onDateChange(e.currentTarget.value)}
         />
       </label>
+      <div class="font-bold text-sm text-gray-600 tracking-wide border">
+        Keywords
+      </div>
+      {#each keywords as keyword, i}
+        <div class="flex space-x-2 items-center justify-between">
+          <input
+            type="text"
+            class="px-4 py-2 text-gray-600 rounded mt-1"
+            bind:value={keyword}
+          />
+          <button
+            class="text-gray-500 text-xs font-semibold"
+            on:click={() =>
+              settings.update((settings) => ({
+                ...settings,
+                keywords: settings.keywords.filter((_, j) => i !== j),
+              }))}>Remove</button
+          >
+        </div>
+      {/each}
+      <button
+        class="underline text-gray-700 text-sm"
+        on:click={() => {
+          settings.update((settings) => ({
+            ...settings,
+            keywords: [...settings.keywords, ""],
+          }));
+        }}>+ Add another</button
+      >
     </div>
   </div>
 </div>
