@@ -1,5 +1,6 @@
 ---
 import Timer from '../components/Timer.svelte';
+import WordReveal from '../components/WordReveal.svelte';
 import Settings from '../components/Settings.svelte';
 
 let title = 'My Astro Site';
@@ -25,7 +26,10 @@ let title = 'My Astro Site';
 <body>
     <main>
         <div class="w-screen h-screen flex items-center justify-center">
-            <Timer client:only />
+            <div class="flex flex-col items-center">
+                <Timer client:only />
+                <WordReveal client:only />
+            </div>
             <Settings client:load />
         </div>
     </main>

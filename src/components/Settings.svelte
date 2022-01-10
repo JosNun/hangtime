@@ -71,7 +71,19 @@
           <input
             type="text"
             class="px-4 py-2 text-gray-600 rounded mt-1"
-            bind:value={keyword}
+            value={keyword}
+            on:input={(e) => {
+              const value = e.currentTarget.value;
+
+              const newKeywords = [...keywords];
+
+              newKeywords[i] = value;
+
+              settings.update((settings) => ({
+                ...settings,
+                keywords: newKeywords,
+              }));
+            }}
           />
           <button
             class="text-gray-500 text-xs font-semibold"
