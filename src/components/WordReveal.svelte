@@ -45,6 +45,7 @@
     {#each currentWord as letter, i}
       <div
         class="w-8 uppercase text-center border-b-2 border-gray-300 font-semibold text-gray-700"
+        class:invisible={/\s/.test(letter)}
       >
         <span class="opacity-0" class:opacity-100={shownLetters[i]}
           >{letter}</span
