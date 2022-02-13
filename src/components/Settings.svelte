@@ -39,7 +39,7 @@
     Settings
   </button>
   <div
-    class="fixed left-0 top-0 w-96 h-full bg-gray-200 trnasform translate transition {!isOpen
+    class="fixed left-0 top-0 w-96 max-w-full h-full bg-gray-200 pb-3 overflow-auto translate transition {!isOpen
       ? '-translate-x-full'
       : ''}"
   >
@@ -70,7 +70,7 @@
         <div class="flex space-x-2 items-center justify-between">
           <input
             type="text"
-            class="px-4 py-2 text-gray-600 rounded mt-1"
+            class="px-4 py-2 text-gray-600 rounded mt-1 min-w-0"
             value={keyword}
             on:input={(e) => {
               const value = e.currentTarget.value;
