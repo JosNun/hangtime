@@ -32,7 +32,7 @@
       } else {
         showNextWord();
       }
-    }, 10_000);
+    }, 2_000);
   }
 
   function showNextWord() {
@@ -49,18 +49,20 @@
 {#if currentWord}
   <div class="flex space-x-2 text-3xl">
     {#each currentWord as letter, i}
-      <div
-        class="w-8 uppercase text-center border-b-2 border-gray-300 font-semibold text-gray-700"
-        class:invisible={/\s/.test(letter)}
-      >
+      {#key currentWord + i}
         <div
-          class="transition transform duration-700 {!shownLetters[i]
-            ? 'opacity-0 -translate-y-2 scale-75'
-            : 'opacity-100'}"
+          class="w-8 uppercase text-center border-b-2 border-gray-300 font-semibold text-gray-700"
+          class:invisible={/\s/.test(letter)}
         >
-          {letter}
+          <div
+            class="transition transform duration-700 {!shownLetters[i]
+              ? 'opacity-0 -translate-y-2 scale-75'
+              : 'opacity-100'}"
+          >
+            {letter}
+          </div>
         </div>
-      </div>
+      {/key}
     {/each}
   </div>
 {/if}
