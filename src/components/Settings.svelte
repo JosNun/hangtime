@@ -72,6 +72,7 @@
             type="text"
             class="px-4 py-2 text-gray-600 rounded mt-1 min-w-0"
             value={keyword}
+            autofocus
             on:input={(e) => {
               const value = e.currentTarget.value;
 
