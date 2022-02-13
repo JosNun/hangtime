@@ -53,9 +53,13 @@
         class="w-8 uppercase text-center border-b-2 border-gray-300 font-semibold text-gray-700"
         class:invisible={/\s/.test(letter)}
       >
-        <span class="opacity-0" class:opacity-100={shownLetters[i]}
-          >{letter}</span
+        <div
+          class="transition transform duration-700 {!shownLetters[i]
+            ? 'opacity-0 -translate-y-2 scale-75'
+            : 'opacity-100'}"
         >
+          {letter}
+        </div>
       </div>
     {/each}
   </div>
