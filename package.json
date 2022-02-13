@@ -9,8 +9,8 @@
     "preview": "astro preview"
   },
   "devDependencies": {
-    "astro": "^0.22.9",
-    "tailwindcss": "^3.0.12"
+    "astro": "^0.22.20",
+    "tailwindcss": "^3.0.22"
   },
   "dependencies": {
     "date-fns": "^2.28.0"
