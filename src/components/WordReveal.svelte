@@ -7,6 +7,12 @@
     false
   ) as boolean[];
 
+  $: currentWord?.split("").forEach((letter, i) => {
+    if (/\s/.test(letter)) {
+      shownLetters[i] = true;
+    }
+  });
+
   $: currentWord, clearTimeout(changeTimeout), onWordChange();
 
   function onWordChange() {
