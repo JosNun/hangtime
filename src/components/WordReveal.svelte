@@ -32,7 +32,7 @@
       } else {
         showNextWord();
       }
-    }, 2_000);
+    }, 10_000);
   }
 
   function showNextWord() {
