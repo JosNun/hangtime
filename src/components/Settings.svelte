@@ -39,7 +39,7 @@
     Settings
   </button>
   <div
-    class="fixed left-0 top-0 w-96 max-w-full h-full bg-gray-200 pb-3 overflow-auto translate transition {!isOpen
+    class="fixed left-0 top-0 z-10 w-96 max-w-full h-full bg-gray-200 pb-3 overflow-auto translate transition {!isOpen
       ? '-translate-x-full'
       : ''}"
   >
