@@ -3,11 +3,14 @@ import Timer from '../components/Timer.svelte';
 import WordReveal from '../components/WordReveal.svelte';
 import Settings from '../components/Settings.svelte';
 import Fullscreen from '../components/Fullscreen.svelte';
+import '../styles/global.css'
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 ---
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
@@ -18,10 +21,8 @@ import Fullscreen from '../components/Fullscreen.svelte';
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
-
-    
-    <link rel="stylesheet" href={Astro.resolve('../styles/global.css')}>
 </head>
+
 <body>
     <main class="bg-white">
         <div class="w-screen h-screen flex items-center justify-center">
@@ -38,4 +39,5 @@ import Fullscreen from '../components/Fullscreen.svelte';
         </div>
     </main>
 </body>
+
 </html>
