@@ -1,7 +1,9 @@
 <script lang="ts">
   import { isValid } from "date-fns";
   import { settings } from "../stores";
+
   let isOpen = true;
+  let reference = "";
 
   const inputHour = $settings.endTime.getHours().toString().padStart(2, "0");
   const inputMinute = $settings.endTime
@@ -11,7 +13,23 @@
 
   $: inputValue = inputHour + ":" + inputMinute;
 
-  $: keywords = $settings.keywords;
+  async function fetchReference() {
+    const res = await fetch(
+      `https://api.esv.org/v3/passage/text/?q=${encodeURIComponent(
+        reference
+      )}&include-verse-numbers=false&include-short-copyright=false&include-passage-references=false`,
+      {
+        headers: {
+          Authorization: `Token ${import.meta.env.PUBLIC_ESV_API_KEY}`,
+        },
+      }
+    ).then((res) => res.json());
+
+    console.log({
+      reference: res.canonical,
+      passage: res.passages,
+    });
+  }
 
   function onDateChange(dateInput: string) {
     const [hours, minutes] = dateInput.split(":");
@@ -39,7 +57,7 @@
     Settings
   </button>
   <div
-    class="fixed left-0 top-0 z-10 w-96 max-w-full h-full bg-gray-200 pb-3 overflow-auto translate transition {!isOpen
+    class="fixed left-0 top-0 z-10 w-96 max-w-full h-full bg-gray-200 pb-3 overflow-auto translate transition flex flex-col {!isOpen
       ? '-translate-x-full'
       : ''}"
   >
@@ -63,48 +81,34 @@
           on:change={(e) => onDateChange(e.currentTarget.value)}
         />
       </label>
-      <div class="font-bold text-sm text-gray-600 tracking-wide border">
-        Keywords
-      </div>
-      {#each keywords as keyword, i}
-        <div class="flex space-x-2 items-center justify-between">
+
+      <form
+        on:submit={(e) => {
+          e.preventDefault();
+          fetchReference();
+        }}
+      >
+        <div class="font-bold text-sm text-gray-600 tracking-wide border">
+          Reference
+        </div>
+        <div class="flex items-center space-x-2">
           <input
             type="text"
-            class="px-4 py-2 text-gray-600 rounded mt-1 min-w-0"
-            value={keyword}
-            autofocus
-            on:input={(e) => {
-              const value = e.currentTarget.value;
-
-              const newKeywords = [...keywords];
-
-              newKeywords[i] = value;
-
-              settings.update((settings) => ({
-                ...settings,
-                keywords: newKeywords,
-              }));
-            }}
+            placeholder="e.g. 'John 3:16'"
+            class="px-4 py-2 text-gray-600 rounded mt-1 flex-1 min-w-0"
+            bind:value={reference}
           />
           <button
-            class="text-gray-500 text-xs font-semibold"
-            on:click={() =>
-              settings.update((settings) => ({
-                ...settings,
-                keywords: settings.keywords.filter((_, j) => i !== j),
-              }))}>Remove</button
+            class="hover:bg-gray-300 transition px-2 py-1 rounded"
+            type="submit">Fetch</button
           >
         </div>
-      {/each}
-      <button
-        class="underline text-gray-700 text-sm"
-        on:click={() => {
-          settings.update((settings) => ({
-            ...settings,
-            keywords: [...settings.keywords, ""],
-          }));
-        }}>+ Add another</button
-      >
+      </form>
+    </div>
+    <div class="text-xs text-gray-600 mt-auto px-4 py-2">
+      Scripture quotations are from The ESV® Bible (The Holy Bible, English
+      Standard Version®), copyright © 2001 by Crossway, a publishing ministry of
+      Good News Publishers. Used by permission. All rights reserved
     </div>
   </div>
 </div>
