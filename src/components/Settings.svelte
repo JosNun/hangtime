@@ -14,21 +14,28 @@
   $: inputValue = inputHour + ":" + inputMinute;
 
   async function fetchReference() {
-    const res = await fetch(
+    const res = (await fetch(
       `https://api.esv.org/v3/passage/text/?q=${encodeURIComponent(
         reference
-      )}&include-verse-numbers=false&include-short-copyright=false&include-passage-references=false`,
+      )}&include-verse-numbers=false&include-short-copyright=false&include-passage-references=false&include-footnotes=false`,
       {
         headers: {
           Authorization: `Token ${import.meta.env.PUBLIC_ESV_API_KEY}`,
         },
       }
-    ).then((res) => res.json());
+    ).then((res) => res.json())) as {
+      canonical: string;
+      query: string;
+      passages: string[];
+    };
 
-    console.log({
-      reference: res.canonical,
-      passage: res.passages,
-    });
+    settings.update((settings) => ({
+      ...settings,
+      passage: {
+        reference: res.canonical.trim(),
+        text: res.passages.map((text) => text.trim()).join(""),
+      },
+    }));
   }
 
   function onDateChange(dateInput: string) {
