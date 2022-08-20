@@ -1,57 +1,102 @@
 <script lang="ts">
-  import { state, settings } from "../stores";
+  import { settings } from "../stores";
   $: text = $settings.passage.text;
   $: reference = $settings.passage.reference;
   let changeTimeout;
+  let showAgainTimeout;
 
   const wordRegex = /[a-zA-Z0-9]/;
+  const defaultCharacterTimeout = 5_000;
+  let characterTimeout = defaultCharacterTimeout;
 
   let wordGroups;
+  let shownLetters;
 
-  $: {
-    wordGroups = text.split(/\s/g).map((word, i, arr) => {
-      const offset = arr
-        .slice(0, i)
-        .reduce((acc, word) => acc + word.length, 0);
+  $: getShownLetters = (wordGroups) => {
+    const letters = new Array(
+      wordGroups.reduce((acc, word) => word.letters.length + acc, 0)
+    ).fill(false) as boolean[];
 
-      return {
-        offset,
-        letters: word,
-      };
-    });
+    for (let group of wordGroups) {
+      for (let i = 0; i < group.letters.length; i++) {
+        if (!wordRegex.test(group.letters[i])) {
+          letters[group.offset + i] = true;
+        }
+      }
+    }
+
+    return letters;
+  };
+
+  const initWordGroups = () => {
+    wordGroups = text
+      .split(/\s/g)
+      .filter(Boolean)
+      .map((word, i, arr) => {
+        const offset = arr
+          .slice(0, i)
+          .reduce((acc, word) => acc + word.length, 0);
+
+        return {
+          offset,
+          letters: word,
+        };
+      });
 
     const wordGroupOffset = wordGroups.reduce((acc, wordGroup) => {
       return acc + wordGroup.letters.length;
     }, 0);
 
-    const referenceGroups = reference.split(/\s/g).map((word, i, arr) => {
-      const offset =
-        wordGroupOffset +
-        arr.slice(0, i).reduce((acc, word) => acc + word.length, 0);
+    const referenceGroups = reference
+      .split(/\s/g)
+      .filter(Boolean)
+      .map((word, i, arr) => {
+        const offset =
+          wordGroupOffset +
+          arr.slice(0, i).reduce((acc, word) => acc + word.length, 0);
 
-      return {
-        isReferenceStart: i === 0,
-        offset,
-        letters: word,
-      };
-    });
+        return {
+          isReferenceStart: i === 0,
+          offset,
+          letters: word,
+        };
+      });
 
     wordGroups = [...wordGroups, ...referenceGroups];
-  }
+  };
 
-  $: shownLetters = new Array(
-    wordGroups.reduce((acc, word) => word.letters.length + acc, 0)
-  ).fill(false) as boolean[];
+  const initShownLetters = () => {
+    shownLetters = getShownLetters(wordGroups);
+  };
 
-  $: for (let group of wordGroups) {
-    for (let i = 0; i < group.letters.length; i++) {
-      if (!wordRegex.test(group.letters[i])) {
-        shownLetters[group.offset + i] = true;
-      }
+  $: init = () => {
+    initWordGroups();
+    initShownLetters();
+
+    const charCount = (text + reference)
+      .split("")
+      .filter((char) => wordRegex.test(char)).length;
+    const timeRemaining = new Date(
+      $settings.endTime.getTime() - new Date().getTime()
+    ).getTime();
+
+    const iterationTime = charCount * characterTimeout;
+
+    if (iterationTime > timeRemaining) {
+      characterTimeout = (timeRemaining - 10_000) / charCount;
+    } else {
+      characterTimeout = defaultCharacterTimeout;
     }
-  }
 
-  $: text, clearTimeout(changeTimeout), onWordChange();
+    onWordChange();
+  };
+
+  const clearTimer = () => {
+    clearTimeout(changeTimeout);
+    clearTimeout(showAgainTimeout);
+  };
+
+  $: $settings.endTime, text, clearTimer(), init();
 
   function onWordChange() {
     changeTimeout = setTimeout(() => {
@@ -67,20 +112,25 @@
         shownLetters[toShow] = true;
 
         onWordChange();
-      } else {
-        showNextWord();
+      } else if (wordGroups.length) {
+        showAgainTimeout = setTimeout(showAgain, 10_000);
       }
-    }, 1_000);
+    }, characterTimeout);
   }
 
-  function showNextWord() {
-    state.update((current) => ({
-      ...current,
-      // currentWord:
-      //   current.currentWord + 1 > $settings.keywords.length
-      //     ? 0
-      //     : current.currentWord + 1,
-    }));
+  function showAgain() {
+    const timeRemaining = new Date(
+      $settings.endTime.getTime() - new Date().getTime()
+    ).getTime();
+
+    const iterationTime =
+      (text + reference).split("").filter((char) => wordRegex.test(char))
+        .length * characterTimeout;
+
+    if (iterationTime < timeRemaining) {
+      shownLetters = getShownLetters(wordGroups);
+      onWordChange();
+    }
   }
 </script>
 

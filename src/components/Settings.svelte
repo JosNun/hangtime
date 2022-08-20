@@ -17,7 +17,7 @@
     const res = (await fetch(
       `https://api.esv.org/v3/passage/text/?q=${encodeURIComponent(
         reference
-      )}&include-verse-numbers=false&include-short-copyright=false&include-passage-references=false&include-footnotes=false`,
+      )}&include-verse-numbers=false&include-short-copyright=false&include-passage-references=false&include-footnotes=false&include-headings=false&include-selahs=false`,
       {
         headers: {
           Authorization: `Token ${import.meta.env.PUBLIC_ESV_API_KEY}`,

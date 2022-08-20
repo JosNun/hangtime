@@ -14,7 +14,3 @@ export const settings = writable<{
     reference: "",
   },
 });
-
-export const state = writable({
-  currentWord: 0,
-});
