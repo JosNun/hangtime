@@ -2,19 +2,42 @@
   import { state, settings } from "../stores";
   $: text = $settings.passage.text;
   $: reference = $settings.passage.reference;
-  $: display = text.trim() + "\n" + reference;
   let changeTimeout;
 
   const wordRegex = /[a-zA-Z0-9]/;
 
-  $: wordGroups = text.split(/\s/g).map((word, i, arr) => {
-    const offset = arr.slice(0, i).reduce((acc, word) => acc + word.length, 0);
+  let wordGroups;
 
-    return {
-      offset,
-      letters: word,
-    };
-  });
+  $: {
+    wordGroups = text.split(/\s/g).map((word, i, arr) => {
+      const offset = arr
+        .slice(0, i)
+        .reduce((acc, word) => acc + word.length, 0);
+
+      return {
+        offset,
+        letters: word,
+      };
+    });
+
+    const wordGroupOffset = wordGroups.reduce((acc, wordGroup) => {
+      return acc + wordGroup.letters.length;
+    }, 0);
+
+    const referenceGroups = reference.split(/\s/g).map((word, i, arr) => {
+      const offset =
+        wordGroupOffset +
+        arr.slice(0, i).reduce((acc, word) => acc + word.length, 0);
+
+      return {
+        isReferenceStart: i === 0,
+        offset,
+        letters: word,
+      };
+    });
+
+    wordGroups = [...wordGroups, ...referenceGroups];
+  }
 
   $: shownLetters = new Array(
     wordGroups.reduce((acc, word) => word.letters.length + acc, 0)
@@ -61,15 +84,18 @@
   }
 </script>
 
-{#if display}
-  <div class="flex gap-5 text-3xl max-w-full flex-wrap mx-8">
+{#if wordGroups}
+  <div class="flex gap-5 text-3xl max-w-full flex-wrap justify-center mx-8">
     {#each wordGroups as group, i}
       {#key group.letters + i}
-        <span class="flex space-x-1">
+        {#if group.isReferenceStart}
+          <div class="w-full" />
+        {/if}
+        <span class="flex space-x-1 {group.isReferenceStart ? 'ml-auto' : ''}">
           {#each group.letters.split("") as letter, i}
             {@const isSymbol = !wordRegex.test(letter)}
             <div
-              class="w-8 uppercase text-center {!isSymbol
+              class="w-7 uppercase text-center {!isSymbol
                 ? 'border-b-2 border-gray-300 '
                 : ''} font-semibold text-gray-700"
             >
